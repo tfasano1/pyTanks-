@@ -1,3 +1,3 @@
 # pyTanks!
 
-## Wii Tanks! but in Python.
+### Wii Tanks! but in Python.
