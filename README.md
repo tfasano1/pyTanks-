@@ -1,5 +1,5 @@
 # pyTanks!
 
-### Wii Tanks! but in Python.
+### Wii Tanks! using the pygame Library!
 
 ![](assets/game.png)
