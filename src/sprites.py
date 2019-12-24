@@ -351,7 +351,7 @@ class Wall(py.sprite.Sprite):
 
         self.groups =  walls
         py.sprite.Sprite.__init__(self, self.groups)
-        self.tile_size = 32
+        self.tile_size = 64
         self.img = img
         self.image = py.image.load(self.img)
         self.image = py.transform.scale(self.image, (self.tile_size, self.tile_size))

@@ -24,7 +24,7 @@ class Game():
 
         #Game
         self.wn_width,self.wn_height = 1920,1024
-        self.tile_size =32
+        self.tile_size = 64
         self.wn = py.display.set_mode((self.wn_width,self.wn_height))
         self.state = "MENU"
 
@@ -40,6 +40,7 @@ class Game():
 
         self.bullet_image =  'assets/bulletSilver_outline.png'
         self.wall_image = 'assets/wall.png'
+        self.block_image = 'assets/block.png'
         self.tracksLarge = py.transform.scale(py.image.load('assets/tracksLarge.png').convert_alpha(), (64,64))
         self.trench_image = 'assets/trench.png'
 
@@ -146,6 +147,9 @@ class Game():
                     if tile == '1':         #spawn a wall at any column/row (map.txt)
                         self.wall = sprites.Wall(col, row, self.walls, self.wall_image)
                         self.walls.add(self.wall)
+                    if tile =='l':
+                        self.block = sprites.Wall(col, row, self.walls, self.block_image)
+                        self.walls.add(self.block)
                     if tile == '0':
                         self.trench = sprites.Wall(col, row, self.trenches, self.trench_image)
                         self.trenches.add(self.trench)
