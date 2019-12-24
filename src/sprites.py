@@ -2,6 +2,7 @@ import pygame as py
 import time
 import math
 import random
+from threading import Event
 vec = py.math.Vector2
 
 def collideHitRect(sprite1, sprite2):
@@ -133,7 +134,6 @@ class Player(py.sprite.Sprite):
         self.keys = py.key.get_pressed()
         self.vel = vec(0, 0)
         self.rot_vel = 0
-
 
         if self.keys[py.K_w] : #forwards
             self.vel = vec(150, 0).rotate(-self.rot)
