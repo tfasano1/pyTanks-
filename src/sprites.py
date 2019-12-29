@@ -259,6 +259,7 @@ class Projectile(py.sprite.Sprite):
         self.rect.centery = self.pos.y
         self.image =  py.transform.rotate(self.orig_image, self.angle)
         self.ricochete = py.mixer.Sound('assets/ricochete.wav')
+        self.bullet_kill = py.mixer.Sound('assets/bullet_kill.wav')
 
     def update(self):
 
@@ -286,6 +287,7 @@ class Projectile(py.sprite.Sprite):
                     self.image = py.transform.rotate(self.orig_image, -self.angle)
 
                 elif self.collideWithAnyWall():
+                    self.bullet_kill.play()
                     self.kill()
                     self.wall_hit_flag = False
 
@@ -298,6 +300,7 @@ class Projectile(py.sprite.Sprite):
                     self.image = py.transform.rotate(self.orig_image, -self.angle)
 
                 elif self.collideWithAnyWall():
+                    self.bullet_kill.play()
                     self.kill()
                     self.wall_hit_flag = False
 
@@ -359,3 +362,11 @@ class Wall(py.sprite.Sprite):
         self.x, self.y = x, y
         self.rect.x = x * self.tile_size    #spacing
         self.rect.y = y * self.tile_size
+
+class Mine(py.sprite.Sprite):
+    def __init__(self, x, y):
+        py.sprite.Sprite.__init__(self)
+        self.image = py.transform.scale(py.image.load('assets/mine.png'), (64,64))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y

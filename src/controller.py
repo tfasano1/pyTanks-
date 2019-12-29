@@ -63,6 +63,7 @@ class Game():
         self.trumpet_sound = py.mixer.Sound('assets/trumpet_intro.wav')
         self.explosion = py.mixer.Sound('assets/explosion.wav')
         self.shoot = py.mixer.Sound('assets/shoot.wav')
+        self.latch = py.mixer.Sound('assets/latch.wav')
         self.mission_complete = py.mixer.Sound('assets/round_end.wav')
         self.mission_failed = py.mixer.Sound('assets/mission_failed.wav')
 
@@ -132,6 +133,7 @@ class Game():
         self.bullets = py.sprite.Group()
         self.walls = py.sprite.Group()
         self.trenches = py.sprite.Group()
+        self.mines = py.sprite.Group()
 
         self.new_mission = self.missions[self.mission_number]
 
@@ -170,13 +172,7 @@ class Game():
                         self.turrets.add(self.turret)
                         self.enemy_count += 1
 
-            self.all_sprites = py.sprite.Group((self.tank,), (self.cannon,), tuple(self.walls), tuple(self.trenches), tuple(self.enemies), tuple(self.bullets))
-
-    def respawnPlayer(self):
-        self.tank = sprites.Player(self.spawn_point[0], self.spawn_point[1], self.dt, self.player_images[0], self.walls, self.trenches)
-        self.cannon = sprites.Cannon(self.spawn_point[0], self.spawn_point[1], self.dt, self.player_images[1], self.walls, self.trenches)
-        self.all_sprites.add((self.tank,), (self.cannon,))
-        self.introLoop()
+            self.all_sprites = py.sprite.Group((self.tank,), (self.cannon,), tuple(self.walls), tuple(self.trenches), tuple(self.enemies), tuple(self.bullets), tuple(self.mines))
 
     def menuLoop(self):
 
@@ -195,7 +191,9 @@ class Game():
 
             #Creates Title Text
             self.wn.blit(self.background, (0,0))
-            self.textToScreen("PyTanks!",'freesansbold.ttf',155,(self.wn_width/2,-150 +self.wn_height/2), (0,0,0))
+
+            self.textToScreen("PyTanks!",'freesansbold.ttf',155,(-5 + self.wn_width/2,-150 +self.wn_height/2), (0,0,0))
+            self.textToScreen("PyTanks!",'freesansbold.ttf',155,(self.wn_width/2,-150 +self.wn_height/2), (30,144,255))
 
             #Creating Buttons
             #Every other button acts as a drop shadow
@@ -269,8 +267,9 @@ class Game():
             enemyRemaining = "Enemy Tanks: "+ str(self.enemy_count)
             livesRemaining = str(self.lives)
 
-            self.button("",0,self.wn_height//3,self.wn_width,250,self.red,self.red,100)
-            self.textToScreen(missionMessage,'freesansbold.ttf',120,(self.wn_width/2, 100 + self.wn_height//3),(0,0,0))
+            self.button("",0,self.wn_height//3,self.wn_width,250,(220,20,60),(220,20,60),100)
+            self.textToScreen(missionMessage,'freesansbold.ttf', 120, ( -5 + self.wn_width/2, 100 + self.wn_height//3), (0,0,0))
+            self.textToScreen(missionMessage,'freesansbold.ttf',120,(self.wn_width/2, 100 + self.wn_height//3),(255,228,181))
             self.textToScreen(enemyRemaining,'freesansbold.ttf',50,(self.wn_width/2, 195 + self.wn_height//3),(0,0,0))
             self.button("",0,(self.wn_height//3)+235,self.wn_width,10,self.yellow,self.yellow,100)
             self.button("",0,(self.wn_height//3)+5,self.wn_width,10,self.yellow,self.yellow,100)
@@ -318,6 +317,16 @@ class Game():
 
                 if keys[py.K_p]:
                     self.paused = not self.paused
+
+                if keys[py.K_SPACE]:
+
+                    now = py.time.get_ticks()
+                    if (now - self.last_shot > 500):     #prevents bullet spaming
+                        self.latch.play()
+                        self.last_shot = now
+                        self.mine = sprites.Mine(self.tank.rect.x, self.tank.rect.y)
+                        self.mines.add(self.mine)
+                        self.all_sprites.add(self.mine)
 
                 if keys[py.K_ESCAPE]:
                     self.score = 0
