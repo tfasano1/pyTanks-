@@ -3,6 +3,7 @@ import time
 import math
 import random
 from threading import Event
+import pytweening as tween
 vec = py.math.Vector2
 
 def collideHitRect(sprite1, sprite2):
@@ -172,7 +173,11 @@ class Enemy(py.sprite.Sprite):
         self.rect.center = self.pos
         if self.type == 'G':
             #angular
-            self.rot = (self.player_pos - self.pos).angle_to(vec(1,1))
+
+            if (self.player_pos.x - self.pos.x)**2 + (self.player_pos.y - self.pos.y)**2 > 800**2:
+                self.rot = (self.player_pos - self.pos).angle_to(vec(1,0))
+            else:
+                self.rot = 180 + (self.player_pos - self.pos).angle_to(vec(1,0))
             #linear
             self.acc = vec(100, 0).rotate(-self.rot)
             self.acc += self.vel * -1
@@ -204,26 +209,45 @@ class Turret(py.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.hit_rect = py.Rect(0, 0, 64, 64)
         self.hit_rect.center = self.rect.center
+        self.point_deg = 0
         self.pos = vec(x_cor, y_cor)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
         self.rot = 0
         self.bullet_image =  'assets/bulletSilver_outline.png'
+        #Tweening
+        self.range = 5
+        self.step, self.step_speed = 0 , 0.01
+        self.tween = tween.easeInOutSine
+        self.dir = 1
+
+    def bob(self):
+            
+        offset = self.range * (self.tween(self.step/self.range) - 0.5)
+        self.point_deg =   self.point_deg + offset * self.dir
+        self.step += self.step_speed
+        if self.step >= self.range:
+            self.step = 0
+            self.step *= -1      
 
     def update(self):
 
-
         #angular movement
-        self.point_deg = (self.player_pos - self.pos).angle_to(vec(1,0))  # Subtracting both postion vectors creates a new vector directly from enemy to the player, then finds the angle between the x axis and this new vec.
+        self.bob()
         self.point_rad = math.radians(self.point_deg)
         self.image = py.transform.rotate(self.orig_image, self.point_deg)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
         if self.type == 'G':
-
-            #linear movement
-            self.rot = (self.player_pos - self.pos).angle_to(vec(1,1))
+            #angular movement
+            if (self.player_pos.x - self.pos.x)**2 + (self.player_pos.y - self.pos.y)**2 > 800**2:
+                self.bob()
+                self.rot = (self.player_pos - self.pos).angle_to(vec(1,0))
+            else:
+                self.point_deg = (self.player_pos - self.pos).angle_to(vec(1,0))
+                self.rot = 180 + (self.player_pos - self.pos).angle_to(vec(1,0))
+            #linear movement 
             self.acc = vec(100, 0).rotate(-self.rot)
             self.acc += self.vel * -1
             self.vel += self.acc * self.dt

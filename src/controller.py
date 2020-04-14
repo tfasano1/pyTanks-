@@ -6,7 +6,6 @@ import sys
 import copy
 from os import path
 from threading import Event
-from pynput.keyboard import Key, Controller
 from src import sprites
 vec = py.math.Vector2
 
@@ -17,7 +16,7 @@ class Game():
     def __init__(self):
         '''Initialize all the settings for the game'''
         #Initalize
-        py.mixer.pre_init(88200, -16, 1, 256)
+        py.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512, devicename=None)
         py.init()
         py.mixer.init()
         py.font.init()
@@ -340,7 +339,7 @@ class Game():
                     for self.turret in self.turrets:
 
                         dist_bt_plyr_enmy_squared = (self.tank.pos.x - self.turret.pos.x)**2 + (self.tank.pos.y - self.turret.pos.y)**2
-                        target_radius = 700
+                        target_radius = 800
                         if dist_bt_plyr_enmy_squared < target_radius**2:
 
                             self.turret.shoot()
