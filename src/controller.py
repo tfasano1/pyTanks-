@@ -29,7 +29,7 @@ class Game():
 
         #Time
         self.clock = py.time.Clock()
-        self.dt = self.clock.tick(30)/1000.0
+         elf.dt = self.clock.tick(30)/1000.0
 
         #Images
         self.background = py.transform.scale(py.image.load('assets/Background.jpg').convert_alpha(), (self.wn_width,self.wn_height))

@@ -32,21 +32,6 @@ def wallDetection(dir, sprite, group):  #sets cannon's x velocity to zero if it 
 class Cannon(py.sprite.Sprite):
 
     def __init__(self, x_cor, y_cor, dt, img, walls, trenches):
-        py.sprite.Sprite.__init__(self)
-        self.img = img
-        self.dt = dt
-        self.walls = walls
-        self.trenches = trenches
-        self.width, self.height = 96,96
-        self.image =  py.transform.scale(py.image.load(self.img).convert_alpha(), (self.width, self.height))
-        self.orig_image = self.image.copy()
-        self.rect = self.image.get_rect()
-        self.hit_rect = py.Rect(0,0,64,64)
-        self.hit_rect.center = self.rect.center
-        self.pos = vec(x_cor , y_cor)
-        self.rot_vel = 0
-        self.rot = 0
-
     def update(self):
 
         cursor = py.mouse.set_cursor(*py.cursors.broken_x)
@@ -72,13 +57,13 @@ class Cannon(py.sprite.Sprite):
         self.rot_vel = 0
 
         if keys[py.K_w] : #forwards
-            self.vel = vec(150, 0).rotate(-self.rot)
+            self.vel = vec(60, 0).rotate(-self.rot)
 
         if keys[py.K_a]:   #rotate left
             self.rot_vel = 100
 
         if keys[py.K_s]:  #reverse
-            self.vel = vec(-50, 0).rotate(-self.rot)
+            self.vel = vec(-30, 0).rotate(-self.rot)
 
         if keys[py.K_d]:  #rotate right
             self.rot_vel = -100
@@ -115,6 +100,20 @@ class Player(py.sprite.Sprite):
         self.pos = vec(x_cor, y_cor)
         self.rot = 0
 
+        py.sprite.Sprite.__init__(self)
+        self.img = img
+        self.dt = dt
+        self.walls = walls
+        self.trenches = trenches
+        self.width, self.height = 96,96
+        self.image =  py.transform.scale(py.image.load(self.img).convert_alpha(), (self.width, self.height))
+        self.orig_image = self.image.copy()
+        self.rect = self.image.get_rect()
+        self.hit_rect = py.Rect(0,0,64,64)
+        self.hit_rect.center = self.rect.center
+        self.pos = vec(x_cor , y_cor)
+        self.rot_vel = 0
+        self.rot = 0
     def update(self):
 
         self.getKeys()
@@ -125,6 +124,7 @@ class Player(py.sprite.Sprite):
         self.rect.center = self.pos
         self.hit_rect.centerx = self.pos.x
         wallDetection('x', self, self.walls)
+
         wallDetection('x', self, self.trenches)
         self.hit_rect.centery = self.pos.y
         wallDetection('y', self, self.walls)
@@ -137,7 +137,7 @@ class Player(py.sprite.Sprite):
         self.rot_vel = 0
 
         if self.keys[py.K_w] : #forwards
-            self.vel = vec(150, 0).rotate(-self.rot)
+            self.vel = vec(60, 0).rotate(-self.rot)
 
         if self.keys[py.K_a]:   #rotate left
             self.rot_vel = 100
@@ -179,7 +179,7 @@ class Enemy(py.sprite.Sprite):
             else:
                 self.rot = 180 + (self.player_pos - self.pos).angle_to(vec(1,0))
             #linear
-            self.acc = vec(100, 0).rotate(-self.rot)
+            self.acc = vec(50, 0).rotate(-self.rot)
             self.acc += self.vel * -1
             self.vel += self.acc * self.dt
             self.pos += self.vel * self.dt + 0.5 * self.acc * self.dt**2
@@ -248,7 +248,7 @@ class Turret(py.sprite.Sprite):
                 self.point_deg = (self.player_pos - self.pos).angle_to(vec(1,0))
                 self.rot = 180 + (self.player_pos - self.pos).angle_to(vec(1,0))
             #linear movement 
-            self.acc = vec(100, 0).rotate(-self.rot)
+            self.acc = vec(50, 0).rotate(-self.rot)
             self.acc += self.vel * -1
             self.vel += self.acc * self.dt
             self.pos += self.vel * self.dt + 0.5 * self.acc * self.dt**2
@@ -298,7 +298,7 @@ class Projectile(py.sprite.Sprite):
     def move(self):           #ricochete logic
 
         if not self.collideWithWall('x') and not self.collideWithWall('y') and not self.wall_hit_flag:
-            self.vel = vec(200, 0).rotate(-self.angle)
+            self.vel = vec(100, 0).rotate(-self.angle)
 
         else:
 
