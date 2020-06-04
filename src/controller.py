@@ -1,11 +1,7 @@
 import pygame as py
 import math
 import time
-import os
 import sys
-import copy
-from os import path
-from threading import Event
 from src import sprites
 vec = py.math.Vector2
 
