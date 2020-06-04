@@ -1,8 +1,6 @@
 import pygame as py
 import time
 import math
-import random
-from threading import Event
 import pytweening as tween
 vec = py.math.Vector2
 
